@@ -72,9 +72,17 @@ public final class QuoteSyncJob {
             while (iterator.hasNext()) {
                 String symbol = iterator.next();
 
-
+                if(!quotes.containsKey(symbol))
+                {
+                    continue;
+                }
                 Stock stock = quotes.get(symbol);
+
                 StockQuote quote = stock.getQuote();
+                if(quote.getPrice() ==null || quote.getChange()==null || quote.getChangeInPercent()== null)
+                {
+                    continue;
+                }
 
                 float price = quote.getPrice().floatValue();
                 float change = quote.getChange().floatValue();
@@ -82,6 +90,8 @@ public final class QuoteSyncJob {
 
                 // WARNING! Don't request historical data for a stock that doesn't exist!
                 // The request will hang forever X_x
+
+                Log.i("symbol warning",symbol);
                 List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
 
                 StringBuilder historyBuilder = new StringBuilder();
