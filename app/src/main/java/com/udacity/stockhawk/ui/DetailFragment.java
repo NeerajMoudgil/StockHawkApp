@@ -152,8 +152,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     }
 
+
     /**
      * class to set labels of X Axis
+     * taken help from https://github.com/PhilJay/MPAndroidChart/issues/2190
      */
 
     private class MyCustomFormatter implements IAxisValueFormatter {

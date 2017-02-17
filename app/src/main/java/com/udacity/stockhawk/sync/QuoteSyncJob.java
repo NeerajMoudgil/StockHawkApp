@@ -8,8 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 
@@ -41,6 +45,7 @@ public final class QuoteSyncJob {
     private QuoteSyncJob() {
     }
 
+
     static void getQuotes(Context context) {
 
         Timber.d("Running sync job");
@@ -48,6 +53,7 @@ public final class QuoteSyncJob {
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
         from.add(Calendar.YEAR, -YEARS_OF_HISTORY);
+
 
         try {
 
@@ -65,22 +71,28 @@ public final class QuoteSyncJob {
             Map<String, Stock> quotes = YahooFinance.get(stockArray);
             Iterator<String> iterator = stockCopy.iterator();
 
-            Timber.d(quotes.toString());
+            Timber.d("quotes" + quotes.toString());
 
             ArrayList<ContentValues> quoteCVs = new ArrayList<>();
 
             while (iterator.hasNext()) {
                 String symbol = iterator.next();
 
-                if(!quotes.containsKey(symbol))
-                {
+                if (!quotes.containsKey(symbol)) {
+                    PrefUtils.removeStock(context, symbol);
+
+                    showNoStockToast(context);
+
                     continue;
                 }
                 Stock stock = quotes.get(symbol);
 
                 StockQuote quote = stock.getQuote();
-                if(quote.getPrice() ==null || quote.getChange()==null || quote.getChangeInPercent()== null)
-                {
+                if (quote.getPrice() == null || quote.getChange() == null || quote.getChangeInPercent() == null) {
+
+                    PrefUtils.removeStock(context, symbol);
+                    showNoStockToast(context);
+
                     continue;
                 }
 
@@ -91,7 +103,7 @@ public final class QuoteSyncJob {
                 // WARNING! Don't request historical data for a stock that doesn't exist!
                 // The request will hang forever X_x
 
-                Log.i("symbol warning",symbol);
+                Log.i("symbol warning", symbol);
                 List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
 
                 StringBuilder historyBuilder = new StringBuilder();
@@ -177,6 +189,22 @@ public final class QuoteSyncJob {
 
 
         }
+    }
+
+    /**
+     * can't show toast in intenst service thread
+     * need new handler to show on main UI thread
+     *
+     * @param c taken help from http://stackoverflow.com/questions/20059188/java-lang-runtimeexception-handler-android-os-handler-sending-message-to-a-ha
+     */
+    private static void showNoStockToast(final Context c) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(c, c.getString(R.string.no_stock_symbol), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 

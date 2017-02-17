@@ -36,6 +36,7 @@
 
     <string name="chart_label" translatable="true">Stock Values</string>
     <string name="chart_descr" translatable="true">Stock Values/Time</string>
+    <string name="no_stock_symbol" translatable="true">Given stock symbol doesn\'t exist</string>
 
 
 
