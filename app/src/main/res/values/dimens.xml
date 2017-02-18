@@ -4,6 +4,6 @@
 
     <dimen name="widget_stock_default_width">250dp</dimen>
     <dimen name="widget_stock_default_height">160dp</dimen>
-    <dimen name="widget_stock_min_resize_width">220dp</dimen>
+    <dimen name="widget_stock_min_resize_width">230dp</dimen>
     <dimen name="widget_stock_min_resize_height">@dimen/widget_stock_default_height</dimen>
 </resources>

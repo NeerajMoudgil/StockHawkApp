@@ -3,7 +3,6 @@ package com.udacity.stockhawk.widget;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Binder;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -100,9 +99,8 @@ public class StockWidgetremoteViewsService extends RemoteViewsService{
                 }
 
                 final Intent fillInIntent = new Intent();
-                Uri stockUri = Contract.Quote.makeUriForStock(data.getString(Contract.Quote.POSITION_SYMBOL));
-                fillInIntent.setData(stockUri);
-                views.setOnClickFillInIntent(R.id.widget_list, fillInIntent);
+                fillInIntent.putExtra("symbol",data.getString(Contract.Quote.POSITION_SYMBOL));
+                views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
                 return views;
             }
 

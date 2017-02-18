@@ -18,9 +18,7 @@ import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.ui.DetailActivity;
 import com.udacity.stockhawk.ui.MainActivity;
 
-
 public class StockWidgetProvider extends AppWidgetProvider {
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Perform this loop procedure for each App Widget that belongs to this provider
@@ -30,7 +28,7 @@ public class StockWidgetProvider extends AppWidgetProvider {
             //Create an Intent to launch MainActivity
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            //views.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
+            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
             // Set up the collection
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
